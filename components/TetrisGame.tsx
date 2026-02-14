@@ -44,8 +44,21 @@ export function TetrisGame() {
 
   useEffect(() => {
     // 在客户端初始化游戏，从 localStorage 读取最高分
-    const highScore = getHighScore()
-    setGame(createNewGame(highScore))
+    try {
+      const highScore = getHighScore()
+      const newGame = createNewGame(highScore)
+      setGame(newGame)
+      console.log('游戏初始化成功', newGame)
+    } catch (error) {
+      console.error('游戏初始化失败', error)
+      // 降级：使用默认最高分创建游戏
+      try {
+        const fallbackGame = createNewGame(0)
+        setGame(fallbackGame)
+      } catch {
+        console.error('降级初始化也失败')
+      }
+    }
   }, [])
 
   // ========================================
@@ -137,15 +150,15 @@ export function TetrisGame() {
   // ========================================
 
   const handleStart = () => {
-    setGame((g) => (g.gameState === 'idle' ? startGame(g) : g))
+    setGame((g) => (g?.gameState === 'idle' ? startGame(g) : g))
   }
 
   const handlePause = () => {
-    setGame(pauseGame)
+    setGame((g) => (g ? pauseGame(g) : g))
   }
 
   const handleResume = () => {
-    setGame(resumeGame)
+    setGame((g) => (g ? resumeGame(g) : g))
   }
 
   const handleRestart = () => {
@@ -165,7 +178,7 @@ export function TetrisGame() {
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!touchStart || game.gameState !== 'playing') {
+    if (!touchStart || !game || game.gameState !== 'playing') {
       return
     }
 
@@ -180,18 +193,18 @@ export function TetrisGame() {
 
     if (absDx < minSwipe && absDy < minSwipe) {
       // 点击：旋转
-      setGame((g) => rotatePiece(g))
+      setGame((g) => g ? rotatePiece(g) : g)
     } else if (absDx > absDy) {
       // 水平滑动
       if (dx > 0) {
-        setGame((g) => movePiece(g, 'right'))
+        setGame((g) => g ? movePiece(g, 'right') : g)
       } else {
-        setGame((g) => movePiece(g, 'left'))
+        setGame((g) => g ? movePiece(g, 'left') : g)
       }
     } else {
       // 垂直滑动
       if (dy > 0) {
-        setGame((g) => hardDrop(g))
+        setGame((g) => g ? hardDrop(g) : g)
       }
     }
 
@@ -290,7 +303,7 @@ function InfoCard({ title, value }: InfoCardProps) {
 }
 
 interface GameBoardProps {
-  board: typeof import('@/lib/types').Board extends Array<infer T> ? T[][] : never
+  board: import('@/lib/types').Board
   ghostPosition: { x: number; y: number } | null
   lineClearing: number[]
 }
@@ -344,7 +357,7 @@ function GameBoard({ board, ghostPosition, lineClearing }: GameBoardProps) {
 }
 
 interface NextPieceProps {
-  piece: typeof import('@/lib/types').Tetromino | null
+  piece: import('@/lib/types').Tetromino | null
 }
 
 function NextPiece({ piece }: NextPieceProps) {
@@ -430,7 +443,7 @@ function GameControls({ gameState, onStart, onPause, onResume, onRestart }: Game
 }
 
 interface GameOverOverlayProps {
-  stats: typeof import('@/lib/types').GameStats
+  stats: import('@/lib/types').GameStats
   onRestart: () => void
 }
 

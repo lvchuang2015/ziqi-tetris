@@ -4,8 +4,8 @@
  */
 'use client'
 
-import { TetrisGame } from '@/components/TetrisGame'
+import { TetrisGameSimple } from '@/components/TetrisGameSimple'
 
 export default function HomePage() {
-  return <TetrisGame />
+  return <TetrisGameSimple />
 }
