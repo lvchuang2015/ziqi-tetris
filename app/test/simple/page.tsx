@@ -1,6 +1,7 @@
 /**
  * 测试页面 - 排查问题
  */
+'use client'
 
 export default function TestPage() {
   return (
