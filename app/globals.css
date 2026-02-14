@@ -1,0 +1,182 @@
+/**
+ * Ziqi Tetris - 紫琪玩方块
+ * 全局样式
+ */
+
+@import 'tailwindcss';
+
+/* ============================================
+   CSS 变量 - 主题配色
+   ============================================ */
+
+@theme {
+  --color-ziqi-dark: #1a0a2e;
+  --color-ziqi-purple: #2d1b4e;
+  --color-ziqi-accent: #9d4edd;
+  --color-ziqi-pink: #ff006e;
+  --color-ziqi-cyan: #06b6d4;
+  --color-ziqi-yellow: #facc15;
+  --color-ziqi-green: #22c55e;
+}
+
+/* ============================================
+   基础样式
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-ziqi-dark);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   自定义动画
+   ============================================ */
+
+@keyframes lineClear {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+    background-color: #fff;
+    box-shadow: 0 0 20px #fff;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(157, 78, 221, 0.6);
+  }
+}
+
+.animate-line-clear {
+  animation: lineClear 0.3s ease-out forwards;
+}
+
+.animate-drop {
+  animation: drop 0.15s ease-in;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* ============================================
+   工具类
+   ============================================ */
+
+/* 禁用选择 */
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 防止触摸操作 */
+.prevent-touch {
+  touch-action: none;
+}
+
+/* ============================================
+   响应式辅助
+   ============================================ */
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  /* 触摸反馈 */
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* ============================================
+   自定义滚动条
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-ziqi-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ziqi-purple);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ziqi-accent);
+}
+
+/* ============================================
+   焦点样式
+   ============================================ */
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-ziqi-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   打印样式
+   ============================================ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+}
+
+/* ============================================
+   减少动画（用户偏好）
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
